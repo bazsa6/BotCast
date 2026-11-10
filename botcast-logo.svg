@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="150" viewBox="0 0 620 150">
+<rect width="620" height="150" fill="#090e0d"/>
+<g transform="translate(18 12)" fill="none" stroke="#b6d6a4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M45 25 L28 118 M45 25 L62 118 M35 83 H55 M31 102 H59" stroke-width="5"/>
+<path d="M45 25 V7 M38 25 H52" stroke="#f0b45b" stroke-width="5"/>
+<path d="M20 42 Q45 12 70 42 M9 30 Q45 -10 81 30" stroke-width="4"/>
+<circle cx="45" cy="25" r="7" fill="#f0b45b" stroke="none"/>
+<path d="M14 123 H76" stroke-width="5"/><path d="M32 62 H58" stroke="#e16e5d" stroke-width="5"/>
+</g>
+<text x="120" y="100" fill="#e9e6d6" font-family="Arial,sans-serif" font-size="78" font-weight="800" letter-spacing="8">BOTCAST</text>
+<circle cx="555" cy="85" r="7" fill="#f0b45b"/>
+<text x="124" y="126" fill="#a6b89a" font-family="monospace" font-size="13" letter-spacing="4">BROADCAST BEYOND REALITY</text>
+</svg>

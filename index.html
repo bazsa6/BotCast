@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a100f">
+<meta name="description" content="BOTCAST — Build your pirate radio empire. A signal-powered roguelike deckbuilder.">
+<title>BOTCAST — Broadcast Beyond Reality</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{
+ --bg:#090e0d;--panel:#101917;--panel2:#14201c;--line:#30423a;
+ --cream:#e9e6d6;--muted:#9ca99c;--green:#b6d6a4;--green2:#6f9b78;
+ --amber:#f0b45b;--red:#e16e5d;--cyan:#76c8bd;--mono:'DM Mono',monospace;--sans:'Space Grotesk',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:var(--sans);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.11;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(180,220,190,.13) 4px);mix-blend-mode:screen}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:19;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.wrap{width:min(1160px,calc(100% - 48px));margin:auto}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.13em}
+.eyebrow{color:var(--green);font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+header{position:sticky;top:0;z-index:30;background:rgba(9,14,13,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(182,214,164,.15)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:.08em}
+.brand-mark{width:31px;height:31px;border:1px solid var(--green);display:grid;place-items:center;color:var(--green);font:14px var(--mono);box-shadow:inset 0 0 12px #6f9b7833}
+.brand span:last-child{font-size:15px}
+.navlinks{display:flex;align-items:center;gap:30px;color:#b5c0b5;font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.navlinks a:hover{color:var(--amber)}
+.nav-cta,.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:13px 18px;border:1px solid var(--green2);color:var(--green);font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;transition:.2s;background:#15231c}
+.nav-cta:hover,.btn:hover{background:var(--green);color:#0b120e;transform:translateY(-2px);box-shadow:0 8px 28px #8bb58b22}
+.menu-btn{display:none;background:none;border:1px solid var(--line);color:var(--cream);padding:9px 12px;font:11px var(--mono)}
+.hero{position:relative;min-height:690px;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(ellipse at 72% 48%,#27433355,transparent 38%),linear-gradient(110deg,#0a100f 10%,#101b17 100%)}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#090e0d 0%,transparent 70%),repeating-linear-gradient(90deg,transparent 0 79px,#9bb89a0a 80px);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:34px;align-items:center;position:relative;z-index:2;padding:70px 0}
+.hero-copy{max-width:560px}
+.status{display:inline-flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #6f9b7855;background:#132019;color:var(--green);font:10px var(--mono);letter-spacing:.13em;text-transform:uppercase;margin-bottom:28px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber);animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.35;box-shadow:0 0 2px var(--amber)}}
+h1{font-size:clamp(58px,9vw,112px);line-height:.83;letter-spacing:-.075em;margin:0 0 24px;font-weight:700}
+h1 .signal{color:var(--green);text-shadow:0 0 34px #9ecb8b33}
+.tagline{font:500 clamp(14px,2vw,18px) var(--mono);letter-spacing:.04em;color:var(--amber);margin-bottom:20px}
+.hero-copy p{font-size:17px;line-height:1.7;color:#b6c0b7;max-width:480px;margin:0 0 30px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn.primary{background:var(--green);color:#0b120e;border-color:var(--green);font-weight:500}
+.btn.secondary{background:transparent;color:var(--cream);border-color:#52665a}
+.hero-meta{display:flex;gap:26px;margin-top:34px;color:#8f9c91;font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.hero-meta b{display:block;color:var(--cream);font-size:12px;font-weight:400;margin-top:7px}
+.console-wrap{position:relative;z-index:1;transform:rotate(1.2deg);filter:drop-shadow(0 25px 35px #0009)}
+.console{grid-column:1;grid-row:1;width:100%;border:1px solid #78927b;background:linear-gradient(145deg,#26362e,#0d1512 70%);padding:14px;box-shadow:inset 0 0 0 5px #0b100e,0 0 0 1px #080c0a;position:relative}
+.console-top{display:flex;justify-content:space-between;align-items:center;padding:5px 8px 13px;color:#a4b49f;font:9px var(--mono);letter-spacing:.14em}
+.live{color:var(--red);display:flex;align-items:center;gap:7px}
+.live:before{content:"";width:6px;height:6px;background:var(--red);border-radius:50%;box-shadow:0 0 9px var(--red)}
+.screen{background:#08120e;border:2px solid #536d59;padding:18px;min-height:285px;position:relative;overflow:hidden;box-shadow:inset 0 0 35px #6f9b7822}
+.screen:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#a7d2a20b 4px)}
+.screen-head{display:flex;justify-content:space-between;color:#8aa68a;font:9px var(--mono);letter-spacing:.13em}
+.frequency{font:clamp(25px,4vw,42px) var(--mono);color:var(--green);text-shadow:0 0 16px #9dca8d66;margin:22px 0 4px}
+.freq-sub{font:9px var(--mono);color:#7b927b;letter-spacing:.16em}
+.wave{height:76px;margin:18px 0 12px;display:flex;align-items:center;gap:4px;justify-content:center}
+.wave i{width:4px;background:var(--green);height:var(--h);opacity:.85;box-shadow:0 0 8px #9dc78c66;animation:wave 1.1s ease-in-out infinite alternate;animation-delay:var(--d)}
+@keyframes wave{to{height:calc(var(--h)*.35);opacity:.45}}
+.screen-foot{display:flex;justify-content:space-between;border-top:1px solid #49604c;padding-top:12px;color:#9db39a;font:9px var(--mono);letter-spacing:.1em}
+.console-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;padding:14px 4px 5px}
+.knob{height:62px;border:1px solid #53685a;background:radial-gradient(circle at 50% 45%,#425447,#17231c 65%);display:grid;place-items:center;position:relative}
+.knob:before{content:"";position:absolute;width:2px;height:15px;background:var(--amber);top:7px;left:50%;transform:rotate(25deg);transform-origin:bottom}
+.knob span{align-self:end;padding-bottom:5px;color:#a7b3a5;font:8px var(--mono);letter-spacing:.1em}
+.console-bottom{display:flex;justify-content:space-between;padding:10px 7px 2px;color:#8ca18b;font:8px var(--mono);letter-spacing:.13em}
+.floating-card{position:absolute;width:118px;height:160px;background:#17251e;border:1px solid #a2bd91;box-shadow:0 12px 24px #0009;padding:9px;right:calc(38% + 5px);bottom:-28px;transform:rotate(8deg)}
+.floating-card .card-art{height:84px;background:linear-gradient(145deg,#405c43,#101b15);display:grid;place-items:center;color:var(--amber);font-size:32px;border:1px solid #667e61}
+.floating-card small{display:block;font:8px var(--mono);color:var(--green);margin-top:8px}
+.floating-card b{font-size:10px;display:block;margin-top:4px}
+.ticker{background:#101914;border-bottom:1px solid var(--line);overflow:hidden;position:relative}
+.ticker-track{display:flex;width:max-content;flex-wrap:nowrap;will-change:transform;transform:translate3d(0,0,0);animation:tickerFlow 64s linear infinite}
+.ticker-group{display:flex;align-items:center;flex:0 0 auto;gap:42px;padding:14px 24px;white-space:nowrap;color:#9bac9b;font:9px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.ticker-group>span{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
+.ticker strong{color:var(--amber);font-weight:500}
+.ticker-news{display:inline-flex;align-items:center;gap:9px;color:#c4cdbf;flex:0 0 auto}
+.ticker-kind{display:inline-block;font-size:9px;font-weight:500;letter-spacing:.14em;white-space:nowrap;color:var(--amber)}
+.ticker-news[data-kind="WARNING"] .ticker-kind,.ticker-news[data-kind="ALERT"] .ticker-kind{color:#f08a75}
+.ticker-news[data-kind="TRANSMISSION"] .ticker-kind{color:var(--cyan)}
+.ticker-news[data-kind="WEATHER"] .ticker-kind{color:#a9b8d0}
+.ticker-news[data-kind="TRAFFIC"] .ticker-kind{color:var(--green)}
+.ticker-headline{display:inline-block;white-space:nowrap}
+.ticker-frequency{color:var(--green);min-width:125px}
+.ticker-frequency b,.footer-frequency b{display:inline-block;width:5ch;text-align:center;font-weight:500;color:var(--cyan);font-variant-numeric:tabular-nums}
+@keyframes tickerFlow{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+@media(max-width:600px){.ticker-group{gap:28px;padding-inline:18px}.ticker-track{animation-duration:54s}}
+@media(prefers-reduced-motion:reduce){.ticker-track{animation:none;transform:none}}
+.footer-meta{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center}
+.footer-frequency{color:#718576;white-space:nowrap}
+
+section{padding:105px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:42px}
+h2{font-size:clamp(34px,5vw,56px);letter-spacing:-.055em;line-height:.98;margin:13px 0 0}
+.section-intro{max-width:390px;color:var(--muted);line-height:1.7;font-size:14px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center}
+.about-art{min-height:330px;border:1px solid var(--line);background:radial-gradient(circle at 50% 45%,#31503a55,transparent 55%),#0e1713;display:grid;place-items:center;position:relative;overflow:hidden}
+.about-art:before,.about-art:after{content:"";position:absolute;background:#526e5422}
+.about-art:before{width:1px;height:100%;left:50%}.about-art:after{height:1px;width:100%;top:50%}
+.tower{width:180px;height:240px;position:relative;display:flex;align-items:center;flex-direction:column;justify-content:end}
+.tower .antenna{height:95px;width:2px;background:var(--green);position:absolute;top:0;box-shadow:0 0 12px var(--green)}
+.tower .antenna:before,.tower .antenna:after{content:"";position:absolute;width:90px;height:50px;border:1px solid #a8c99b77;border-radius:50%;left:50%;top:5px;transform:translateX(-50%)}
+.tower .antenna:after{width:135px;height:78px;top:-8px}
+.tower-base{width:150px;height:110px;border:2px solid #789477;background:linear-gradient(135deg,#263a2b,#0a120e);position:relative;display:grid;place-items:center;box-shadow:0 0 28px #8ab88b22}
+.tower-base:before{content:"ON AIR";position:absolute;top:9px;color:var(--red);font:9px var(--mono);letter-spacing:.2em}
+.tower-base span{font:28px var(--mono);color:var(--green);text-shadow:0 0 15px #8ebf83}
+.art-label{position:absolute;bottom:15px;left:17px;color:#8ba18b;font:9px var(--mono);letter-spacing:.13em}
+.about-copy p{color:#aeb9af;font-size:15px;line-height:1.85}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}
+.stat{border-top:1px solid var(--line);padding-top:13px}
+.stat strong{display:block;font:23px var(--mono);color:var(--amber)}
+.stat span{font:9px var(--mono);color:#87978a;letter-spacing:.1em;text-transform:uppercase}
+.gameplay{background:#0d1512;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{border:1px solid var(--line);background:linear-gradient(160deg,#14201b,#0d1512);padding:24px;min-height:270px;position:relative;overflow:hidden}
+.step-no{font:11px var(--mono);color:var(--amber);letter-spacing:.15em}
+.step h3{font-size:22px;margin:35px 0 10px;letter-spacing:-.04em}
+.step p{color:#9eada0;font-size:13px;line-height:1.7;margin:0}
+.step-icon{position:absolute;right:22px;top:18px;color:#65856a;font:38px var(--mono);opacity:.7}
+.step-line{height:3px;background:linear-gradient(90deg,var(--green2),transparent);position:absolute;bottom:0;left:0;right:0}
+.cards-showcase{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.game-card{border:1px solid #4c6551;background:#111b16;padding:10px;transition:.25s;position:relative}
+.game-card:hover{transform:translateY(-8px) rotate(-1deg);border-color:var(--amber);box-shadow:0 15px 28px #0007}
+.game-card:nth-child(even):hover{transform:translateY(-8px) rotate(1deg)}
+.card-top{display:flex;justify-content:space-between;color:#91a48e;font:8px var(--mono);letter-spacing:.12em;margin-bottom:9px}
+.card-illustration{height:155px;display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #526c54;background:radial-gradient(circle at 50% 40%,#435f43,#101b15 70%)}
+.card-illustration:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff1 4px)}
+.card-symbol{font:54px var(--mono);color:var(--amber);text-shadow:0 0 20px #e5a24a66;z-index:1}
+.card-name{font-weight:700;font-size:15px;margin:12px 0 5px}
+.card-desc{font-size:11px;line-height:1.55;color:#9eada0;min-height:36px}
+.card-value{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #34463a;margin-top:12px;padding-top:10px;font:9px var(--mono);color:var(--green)}
+.rarity{color:var(--amber)}
+.signal-section{background:radial-gradient(ellipse at 70% 40%,#253c2d55,transparent 45%)}
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center}
+.signal-panel{border:1px solid #58705a;background:#0b130f;padding:25px;box-shadow:0 20px 40px #0005}
+.panel-head{display:flex;justify-content:space-between;color:#a0b39e;font:9px var(--mono);letter-spacing:.14em;border-bottom:1px solid #34473a;padding-bottom:15px}
+.meter{height:12px;background:#1a2920;margin:22px 0 9px;border:1px solid #506a52;padding:2px}
+.meter-fill{height:100%;width:68%;background:linear-gradient(90deg,#7baf79,#e4b35b);box-shadow:0 0 12px #9ec58b66}
+.meter-label{display:flex;justify-content:space-between;color:#91a48e;font:9px var(--mono)}
+.wave-large{height:120px;display:flex;align-items:center;justify-content:center;gap:5px;margin:15px 0}
+.wave-large i{width:5px;height:var(--h);background:var(--green);box-shadow:0 0 9px #a4d29455;opacity:.8}
+.signal-copy p{color:#aab6ac;line-height:1.8;font-size:14px}
+.signal-list{list-style:none;padding:0;margin:24px 0 0}
+.signal-list li{padding:12px 0;border-top:1px solid var(--line);font:11px var(--mono);color:#b8c3b8;letter-spacing:.04em}
+.signal-list li:before{content:"+";color:var(--amber);margin-right:12px}
+.features{border-top:1px solid var(--line);background:#0d1512}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.feature{background:#0d1512;padding:26px;min-height:175px}
+.feature .glyph{color:var(--amber);font:23px var(--mono)}
+.feature h3{font-size:17px;margin:20px 0 7px}
+.feature p{color:#9eada0;font-size:12px;line-height:1.65;margin:0}
+.final-cta{padding:105px 0;text-align:center;background:radial-gradient(ellipse at center,#27433366,transparent 60%),#0b120f;border-top:1px solid var(--line)}
+.final-cta h2{font-size:clamp(42px,7vw,76px);max-width:800px;margin:18px auto}
+.final-cta p{color:#a8b5a9;max-width:520px;margin:18px auto 28px;line-height:1.7}
+footer{border-top:1px solid var(--line);padding:27px 0;background:#080d0b}
+.footer-inner{display:grid;grid-template-columns:1fr 2fr 1fr;align-items:center;gap:20px;color:#819083;font:9px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.footer-brand{color:var(--green);font-size:13px;font-weight:500;white-space:nowrap}
+.footer-links{display:flex;justify-content:flex-end;gap:18px;white-space:nowrap}.footer-links a:hover{color:var(--amber)}
+@media(max-width:850px){
+ .footer-inner{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px}
+ .footer-links{justify-content:center;flex-wrap:wrap}
+}
+@media(max-width:850px){
+ .hero-grid{grid-template-columns:1fr;gap:50px;padding:65px 0}.hero{min-height:auto}.hero-copy{max-width:680px}.console-wrap{width:min(590px,92%);margin:auto}
+ .about-grid,.signal-grid{grid-template-columns:1fr;gap:35px}.cards-showcase{grid-template-columns:repeat(2,1fr)}
+ .navlinks{display:none;position:absolute;top:76px;left:0;right:0;padding:22px 24px;background:#0b120f;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:22px}
+ .navlinks.open{display:flex}.menu-btn{display:block}.nav-cta{display:none}
+}
+@media(max-width:600px){
+ .wrap{width:min(100% - 32px,1160px)}section{padding:75px 0}
+ .section-head{display:block}.section-intro{margin-top:20px}
+ .steps{grid-template-columns:1fr}.step{min-height:220px}
+ .feature-grid{grid-template-columns:1fr}.feature{min-height:145px}
+ .hero-meta{gap:16px;flex-wrap:wrap}.screen{min-height:250px;padding:13px}
+ .console{padding:9px}.floating-card{right:-10px;transform:scale(.85) rotate(8deg);transform-origin:bottom right}
+ .footer-inner{grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px}.footer-meta{flex-direction:column;gap:7px}.footer-links{justify-content:center;flex-wrap:wrap}
+ .cards-showcase{gap:10px}.card-illustration{height:125px}.game-card{padding:8px}
+}
+
+.brand-logo{width:39px;height:39px;color:var(--green);filter:drop-shadow(0 0 7px #9ecb8b55);flex:none}
+.signal-panel{position:relative;transition:transform .08s linear;transform:translate(0,0)}
+.signal-screen{position:relative;overflow:hidden;background:#07100b;border:1px solid #425b46;padding:16px 17px 10px;min-height:220px;transition:filter .15s}
+.signal-screen:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;opacity:var(--noise-opacity,.08);background:repeating-linear-gradient(0deg,transparent 0 2px,#d5f1d322 3px),linear-gradient(90deg,transparent,#d5f1d30a,transparent);mix-blend-mode:screen}
+.signal-screen:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;opacity:var(--glitch-opacity,0);background:linear-gradient(transparent 42%,#e16e5d55 43%,transparent 46%);transform:translateX(var(--glitch-x,0));}
+.signal-readout{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:4}
+.readout-label{font:9px var(--mono);letter-spacing:.14em;color:#8da58e}
+.signal-readout strong{font:32px var(--mono);color:var(--green);text-shadow:0 0 15px #a6d49a66}
+.signal-readout strong span{font-size:14px;color:#829b83}
+.signal-screen .meter{margin:12px 0 7px;position:relative;z-index:4}
+.signal-screen .meter-fill{transition:width .12s,filter .12s}
+.signal-screen .meter-label{position:relative;z-index:4}
+.signal-screen .wave-large{height:95px;margin:10px 0 4px;position:relative;z-index:1}
+.wave-large i{transition:height .12s,opacity .12s,transform .08s;transform:translateX(var(--bar-shift,0))}
+.signal-screen .screen-noise{position:absolute;inset:0;pointer-events:none;opacity:var(--noise-opacity,.08);z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+.slider-control{padding:19px 3px 14px;border-bottom:1px solid #34473a}
+.slider-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px}
+.slider-heading label{font:10px var(--mono);letter-spacing:.14em;color:var(--green)}
+.slider-heading span{font:9px var(--mono);color:var(--amber);text-align:right}
+#stabilitySlider{appearance:none;-webkit-appearance:none;width:100%;height:7px;border:1px solid #536b55;background:linear-gradient(90deg,#e16e5d 0%,#e5b15d 48%,#a6d49a 100%);outline:none;cursor:ew-resize;display:block}
+#stabilitySlider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:28px;background:#d9dfc8;border:2px solid #18251b;box-shadow:0 0 0 1px #9cbd8d,0 0 13px #9fc78b66;border-radius:2px}
+#stabilitySlider::-moz-range-thumb{width:18px;height:24px;background:#d9dfc8;border:2px solid #18251b;box-shadow:0 0 0 1px #9cbd8d;border-radius:2px}
+.slider-ends{display:flex;justify-content:space-between;margin-top:10px;color:#7f9381;font:8px var(--mono);letter-spacing:.08em}
+.slider-instruction{text-align:center;margin-top:15px;color:#829583;font:9px var(--mono);letter-spacing:.14em}
+.drag-icon{font-size:16px;color:var(--amber);vertical-align:-1px;margin-right:5px}
+.panel-foot{border:0!important;padding:13px 0 0!important}
+.signal-panel.is-chaotic .signal-screen{filter:saturate(.75) contrast(1.12)}
+.signal-panel.is-chaotic .signal-readout strong{color:#e16e5d;text-shadow:0 0 15px #e16e5d88}
+.signal-panel.is-clean .signal-readout strong{color:var(--green)}
+@keyframes receiverShake{0%{transform:translate(0,0) rotate(0)}20%{transform:translate(-3px,2px) rotate(-.35deg)}40%{transform:translate(3px,-2px) rotate(.35deg)}60%{transform:translate(-2px,-1px) rotate(-.2deg)}80%{transform:translate(2px,2px) rotate(.25deg)}100%{transform:translate(0,0) rotate(0)}}
+.signal-panel.is-shaking{animation:receiverShake .11s steps(2,end) infinite}
+@media(max-width:600px){.slider-heading{align-items:flex-start;flex-direction:column}.slider-heading span{text-align:left}.signal-screen{min-height:205px}}
+
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* MOTION SYSTEM — restrained, GPU-friendly, and accessible */
+.live:before{animation:onAirPulse 1.35s ease-in-out infinite}
+@keyframes onAirPulse{
+  0%,100%{opacity:1;box-shadow:0 0 4px 1px #e16e5d88,0 0 10px #e16e5d66}
+  50%{opacity:.28;box-shadow:0 0 1px #e16e5d44}
+}
+.tower-base:before{animation:none}
+.scroll-reveal{opacity:1;transform:none}
+.motion-ready .scroll-reveal{
+  opacity:0;
+  transform:translate3d(0,22px,0);
+  transition:opacity .72s ease,transform .72s cubic-bezier(.2,.7,.2,1);
+  transition-delay:var(--reveal-delay,0ms);
+  will-change:opacity,transform;
+}
+.motion-ready .scroll-reveal.is-visible{opacity:1;transform:translate3d(0,0,0);will-change:auto}
+.motion-ready .hero-copy > *{animation:heroArrive .8s both}
+.motion-ready .hero-copy > *:nth-child(2){animation-delay:.08s}
+.motion-ready .hero-copy > *:nth-child(3){animation-delay:.16s}
+.motion-ready .hero-copy > *:nth-child(4){animation-delay:.24s}
+.motion-ready .console-wrap{animation:consoleArrive .95s .12s both}
+@keyframes heroArrive{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes consoleArrive{from{opacity:0;transform:translate3d(0,18px,0) scale(.985)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
+
+/* Interactive frequency tuner */
+.tuner{margin:17px 0 2px;padding:13px 11px 10px;border:1px solid #344b3b;background:#0b1711}
+.tuner-top{display:flex;justify-content:space-between;gap:12px;align-items:center;font:9px var(--mono);letter-spacing:.12em;color:#90a990}
+.tuner-current{font:clamp(24px,4vw,34px) var(--mono);color:var(--green);text-shadow:0 0 15px #9dca8d66;margin:10px 0 2px}
+.tuner-current small{font-size:13px}
+.tuner input[type=range]{display:block;width:100%;margin:12px 0 8px;accent-color:var(--green);cursor:ew-resize}
+.tuner-scale{display:flex;justify-content:space-between;color:#718777;font:8px var(--mono)}
+.tuner-feedback{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #2a3b30;font:9px var(--mono);letter-spacing:.08em}
+.tuner-feedback strong{color:var(--amber);font-weight:500;text-align:right}
+.tuner-meter{height:5px;background:#1a2a20;margin-top:9px;overflow:hidden}
+.tuner-meter span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));transition:width .18s ease}
+.tuner-found .tuner-current{color:var(--cyan);text-shadow:0 0 18px #76c8bd99}
+.tuner-found .tuner-feedback strong{color:var(--cyan)}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .motion-ready .scroll-reveal{opacity:1;transform:none;will-change:auto}
+}
+
+
+/* Section 04 — explainer, not a second minigame */
+.broadcast-section{padding:100px 0;border-top:1px solid var(--line);background:linear-gradient(180deg,#0a110e 0%,#0d1712 100%)}
+.broadcast-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:38px}
+.broadcast-step{background:#0c1511;padding:28px;min-height:270px}
+.broadcast-index{font:10px var(--mono);letter-spacing:.13em;color:var(--amber)}
+.broadcast-index span{color:#718576}
+.broadcast-icon{font:32px var(--mono);color:var(--green);margin:30px 0 22px;text-shadow:0 0 18px #a4d29433}
+.broadcast-step h3{font-size:19px;margin:0 0 10px}
+.broadcast-step p{font-size:13px;line-height:1.8;color:#aab6ac;margin:0}
+.broadcast-note{display:flex;align-items:center;gap:18px;border-top:1px solid #34473a;margin-top:24px;padding-top:17px;color:#9eae9f;font-size:12px;line-height:1.6}
+.note-mark{font:9px var(--mono);letter-spacing:.13em;color:var(--amber);white-space:nowrap}
+#listenerCount{display:inline-block;min-width:5.5ch;font-variant-numeric:tabular-nums;transition:filter .12s ease,transform .12s ease}
+#listenerCount.is-glitching{text-shadow:2px 0 var(--red),-2px 0 var(--cyan);filter:blur(.25px);transform:translateX(1px)}
+@media(max-width:760px){.broadcast-section{padding:70px 0}.broadcast-flow{grid-template-columns:1fr}.broadcast-step{min-height:0;padding:24px}.broadcast-icon{margin:20px 0 14px}.broadcast-note{align-items:flex-start;flex-direction:column;gap:6px}}
+
+
+/* HYBRID / BALANCED motion layer */
+:root{--signal-glow:rgba(139,190,133,.13)}
+.hero{isolation:isolate}
+.hero:before{content:"";position:absolute;inset:-15%;z-index:0;pointer-events:none;
+ background:radial-gradient(ellipse at 72% 48%,rgba(120,184,130,.13),transparent 32%),
+ radial-gradient(ellipse at 18% 82%,rgba(214,151,75,.07),transparent 35%);
+ animation:ambientDrift 18s ease-in-out infinite alternate}
+@keyframes ambientDrift{to{transform:translate3d(1.5%,-1%,0) scale(1.04);opacity:.65}}
+.console{transition:box-shadow .35s,border-color .35s}
+.console:hover{border-color:#a3c493;box-shadow:0 0 28px #8dbb8c18,inset 0 0 0 5px #0b100e,0 0 0 1px #080c0a}
+.vu-bank{display:grid;grid-template-columns:1fr 1fr auto;align-items:center;gap:9px;padding:8px 7px 3px;border-top:1px solid #53685a22}
+.vu-unit{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px;color:#849984;font:7px var(--mono);letter-spacing:.08em}
+.vu-track{height:5px;background:#1b2a20;overflow:hidden}
+.vu-track i{display:block;width:70%;height:100%;background:linear-gradient(90deg,#719b6d 0 65%,#d8ad5e 80%,#d66d5e);box-shadow:0 0 7px #9bc18c88;transform-origin:left;animation:vuDance .42s steps(4,end) infinite alternate}
+.vu-unit:nth-child(2) .vu-track i{animation-delay:-.23s}
+.vu-db{font:7px var(--mono);color:var(--amber);white-space:nowrap}
+@keyframes vuDance{0%{transform:scaleX(.24)}25%{transform:scaleX(.63)}50%{transform:scaleX(.39)}75%{transform:scaleX(.92)}100%{transform:scaleX(.52)}}
+.game-card,.feature,.broadcast-step{transition:transform .32s cubic-bezier(.2,.7,.2,1),border-color .32s,box-shadow .32s}
+.game-card:hover{transform:translateY(-7px) rotate(-.5deg);box-shadow:0 16px 36px #0008,0 0 22px #9bc18c18}
+.feature:hover{transform:translateY(-4px);box-shadow:0 12px 28px #0005}
+.broadcast-step:hover{border-color:#718f70}
+body.signal-glitch:after{opacity:.22;filter:contrast(1.4) hue-rotate(-12deg)}
+body.signal-glitch .hero:after{animation:glitchSlice .22s steps(2,end) both}
+body.signal-glitch .console{transform:translateX(2px)}
+@keyframes glitchSlice{0%{clip-path:inset(12% 0 72% 0);transform:translateX(-5px)}35%{clip-path:inset(48% 0 35% 0);transform:translateX(4px)}70%{clip-path:inset(76% 0 9% 0);transform:translateX(-2px)}100%{clip-path:inset(0);transform:none}}
+@media(hover:none){.game-card:hover,.feature:hover,.broadcast-step:hover{transform:none;box-shadow:none}}
+@media(prefers-reduced-motion:reduce){
+ .hero:before,.vu-track i{animation:none!important}
+ .game-card,.feature,.broadcast-step,.console{transition:none!important}
+ body.signal-glitch:after,body.signal-glitch .hero:after{animation:none!important}
+}
+
+
+/* V10 — full interactive underground broadcast atmosphere */
+.dial-visual{height:20px;position:relative;margin:7px 2px 0;display:flex;justify-content:space-between;align-items:end;color:#617968;font:7px var(--mono)}
+.dial-arc{position:absolute;left:8%;right:8%;bottom:4px;height:12px;border-top:1px solid #607c61;border-radius:50%}
+#dialNeedle{position:absolute;left:50%;bottom:2px;width:2px;height:17px;background:var(--amber);box-shadow:0 0 8px var(--amber);transform:rotate(0deg);transform-origin:bottom center;transition:transform .18s ease}
+.tuner-found #dialNeedle{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.tuner-found{border-color:#76c8bd!important;box-shadow:0 0 22px #76c8bd1c,inset 0 0 20px #76c8bd0a}
+.tuner-found .tuner-meter span{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.secret-message{min-height:18px;margin-top:8px;color:#849a83;text-align:center;font:8px var(--mono);letter-spacing:.12em}
+.tuner-found~.secret-message{color:var(--cyan);text-shadow:0 0 10px #76c8bd66;animation:secretReveal .8s ease both}
+@keyframes secretReveal{from{opacity:0;letter-spacing:.35em;filter:blur(3px)}to{opacity:1;letter-spacing:.12em;filter:blur(0)}}
+.screen.signal-locked{background:radial-gradient(ellipse at center,#163b2d,#08120e 72%);box-shadow:inset 0 0 42px #76c8bd2b}
+.screen.signal-locked .screen-head span:last-child{color:var(--cyan)}
+.broadcast-terminal{margin-top:28px;border:1px solid #354a3a;background:#07100c;box-shadow:inset 0 0 25px #0008}
+.terminal-head{display:flex;justify-content:space-between;gap:12px;padding:12px 15px;border-bottom:1px solid #2c4032;color:#8ba38c;font:9px var(--mono);letter-spacing:.12em}
+.terminal-head>span:first-child{display:flex;align-items:center;gap:9px}
+.terminal-head i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 9px var(--red);animation:pulse 1.5s infinite}
+.terminal-lines{padding:8px 15px 13px;min-height:116px}
+.terminal-lines p{display:flex;gap:12px;margin:8px 0;color:#a7b5a6;font:10px/1.6 var(--mono);animation:lineIn .35s ease both}
+.terminal-lines time{color:#647b68;flex:none}
+.terminal-lines b{color:var(--amber);font-weight:500;flex:none}
+@keyframes lineIn{from{opacity:0;transform:translateX(-7px)}to{opacity:1;transform:none}}
+.boot-screen{position:fixed;inset:0;z-index:100;background:#050a08;display:grid;place-items:center;transition:opacity .65s ease,visibility .65s;pointer-events:none}
+.boot-screen.boot-done{opacity:0;visibility:hidden}
+.boot-content{width:min(340px,80vw);text-align:center;color:var(--green);font-family:var(--mono)}
+.boot-mark{font-size:46px;letter-spacing:.12em;text-shadow:0 0 24px #9ecb8b66}
+.boot-mark span{color:var(--red);font-size:20px}
+.boot-title{margin:13px 0 24px;font-size:10px;letter-spacing:.2em}
+.boot-progress{height:3px;background:#1b2a20;overflow:hidden}
+.boot-progress i{display:block;height:100%;width:0;background:var(--green);box-shadow:0 0 12px var(--green);animation:bootLoad 1.25s .15s ease forwards}
+.boot-caption{margin-top:12px;color:#788e7b;font-size:8px;letter-spacing:.14em}
+@keyframes bootLoad{to{width:100%}}
+.warning-flash{position:fixed;z-index:80;top:94px;right:24px;width:min(360px,calc(100vw - 32px));padding:13px 16px;background:rgba(25,10,9,.96);border-left:2px solid var(--red);box-shadow:0 12px 36px #0009;display:flex;flex-direction:column;gap:5px;opacity:0;transform:translateX(24px);pointer-events:none;transition:opacity .25s,transform .25s}
+.warning-flash.visible{opacity:1;transform:translateX(0)}
+.warning-flash b{font:10px var(--mono);letter-spacing:.16em;color:#ff8b79}
+.warning-flash span{font:9px var(--mono);letter-spacing:.08em;color:#e6d8c9}
+.game-card{cursor:help;overflow:hidden}
+.game-card:after{content:"TUNE IN / TRANSMISSION DECODED";position:absolute;left:10px;right:10px;bottom:9px;padding:8px 5px;background:#07100df2;border-top:1px solid var(--cyan);color:var(--cyan);font:8px var(--mono);letter-spacing:.08em;text-align:center;opacity:0;transform:translateY(8px);transition:.25s}
+.game-card:hover:after,.game-card:focus-within:after{opacity:1;transform:translateY(0)}
+.vu-track i{animation:none!important;transition:transform .18s ease}\nbody.section-glitch main section.is-visible{animation:sectionSignal .32s steps(2,end) both}
+@keyframes sectionSignal{0%{filter:none}18%{filter:contrast(1.35) saturate(1.4);transform:translateX(2px)}38%{filter:none;transform:translateX(-1px)}62%{filter:contrast(1.15);transform:translateX(1px)}100%{filter:none;transform:none}}
+body.signal-glitch .screen{animation:screenDisturb .22s steps(2,end)}
+@keyframes screenDisturb{0%{filter:none}40%{filter:brightness(1.7) hue-rotate(35deg)}100%{filter:none}}
+@media(max-width:600px){.warning-flash{top:84px;right:16px}.terminal-head{font-size:8px}.terminal-lines p{font-size:9px;gap:7px}}
+@media(prefers-reduced-motion:reduce){
+ .boot-screen{display:none}.warning-flash,.terminal-lines p{transition:none;animation:none}
+ .dial-visual #dialNeedle{transition:none}
+ body.section-glitch main section.is-visible,body.signal-glitch .screen{animation:none}
+}
+
+
+/* V11 — visual art direction: clandestine 1980s shortwave station */
+:root{--bg:#080d0c;--panel:#0d1512;--panel2:#14201a;--line:#34483b;--cream:#e8e4d3;--muted:#91a093;--green:#b9d6a3;--green2:#719778;--amber:#e9ae58;--red:#df6958;--cyan:#78c9bd}
+html{scroll-padding-top:82px}
+body{background:radial-gradient(ellipse at 50% 0%,rgba(71,104,72,.12),transparent 44%),linear-gradient(90deg,transparent 0 49.9%,rgba(150,178,145,.018) 50%,transparent 50.1%),var(--bg)}
+body:before{opacity:.075;background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(190,220,180,.11) 3px)}
+body:after{opacity:.055}
+.wrap{width:min(1180px,calc(100% - 56px))}
+header{background:rgba(6,11,9,.94);border-bottom-color:#718c6b44;box-shadow:0 8px 30px #0005}
+header:after{content:"";display:block;height:2px;background:linear-gradient(90deg,transparent,var(--green2),var(--amber),transparent);opacity:.38}
+.nav{height:72px}
+.brand-logo{filter:drop-shadow(0 0 8px #a9d39866)}
+.navlinks a{position:relative;padding:8px 0;transition:color .2s}
+.navlinks a:after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--amber);transition:right .25s}
+.navlinks a:hover:after{right:0}
+.hero{min-height:730px;background:radial-gradient(ellipse at 76% 48%,#35543b66,transparent 34%),radial-gradient(ellipse at 15% 85%,#7d54201b,transparent 32%),linear-gradient(110deg,#080e0c 4%,#101c16 100%)}
+.hero:after{opacity:.7;background:linear-gradient(90deg,#080e0c 0%,transparent 78%),repeating-linear-gradient(90deg,transparent 0 79px,#9bb89a0b 80px),repeating-linear-gradient(0deg,transparent 0 79px,#9bb89a08 80px)}
+.hero-copy{position:relative}
+.status{border-color:#e16e5d66;background:linear-gradient(90deg,#291512,#121c16);box-shadow:0 0 20px #d75e4a0d}
+.status .dot{background:var(--red);box-shadow:0 0 13px var(--red);animation:pulse 1.25s infinite}
+h1{text-shadow:0 5px 36px #0008}
+.tagline{letter-spacing:.12em;text-shadow:0 0 18px #e9ae5833}
+.console-wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(220px,.85fr);align-items:center;gap:18px;filter:drop-shadow(0 25px 34px #0009)}
+.console{border-color:#84967d;background:linear-gradient(145deg,#35473a 0%,#1a281f 28%,#0b120f 76%);box-shadow:inset 0 0 0 5px #0a100d,0 0 0 1px #080c0a,0 22px 45px #0008}
+.console:before,.console:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d0d3b9,#515d4d 55%,#151b16);border:1px solid #0b100d;z-index:3}
+.console:before{top:7px;left:7px}.console:after{top:7px;right:7px}
+.console-top{padding-inline:13px}
+.screen{border-color:#66816a;background:radial-gradient(ellipse at 50% 25%,#173023,#07110c 72%);box-shadow:inset 0 0 42px #72a66e22,0 0 14px #79b27c0c}
+.screen:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;opacity:.24;background:linear-gradient(115deg,transparent 15%,#b5d5a20a 48%,transparent 72%);background-size:220% 100%;animation:screenSheen 9s linear infinite}
+@keyframes screenSheen{to{background-position:-220% 0}}
+.frequency{text-shadow:0 0 10px #a6d68c77,0 0 28px #a6d68c33}
+.tuner{background:linear-gradient(180deg,#0b1710,#08100c);border-color:#50664f;box-shadow:inset 0 0 15px #0008}
+.tuner input[type=range]{accent-color:var(--amber)}
+.knob{border-color:#617664;background:radial-gradient(circle at 48% 38%,#5c705d,#26362b 55%,#101711 78%);box-shadow:inset 0 0 9px #0009,0 2px 0 #080c0a}
+.knob:before{height:17px;top:6px;background:var(--amber);box-shadow:0 0 7px #e9ae5877}
+.vu-bank{border-top-color:#82927b33}
+.ticker{background:#0b130f;border-top:1px solid #1b2c20;border-bottom-color:#526b51;box-shadow:0 8px 22px #0004}
+.ticker-group{color:#a6b3a3}.ticker-kind{letter-spacing:.18em}
+section{position:relative;border-bottom:1px solid rgba(87,112,85,.22)}
+section:not(.hero):before{content:"";position:absolute;top:0;left:max(18px,calc((100% - 1180px)/2));width:22px;height:1px;background:var(--amber);opacity:.65}
+.section-head{position:relative;padding-bottom:19px;border-bottom:1px solid #34483b66}
+.eyebrow{color:#b5d09f}
+.section-head .eyebrow:before{content:"";display:inline-block;width:22px;height:1px;margin:0 9px 3px 0;background:var(--amber)}
+h2{letter-spacing:-.065em;text-shadow:0 3px 22px #0008}
+.about-art,.feature,.broadcast-step,.game-card{box-shadow:0 12px 30px #0002}
+.about-art{border-color:#526a53}
+.feature-grid,.broadcast-flow{border-color:#3a5140;background:#3a5140}
+.feature{background:linear-gradient(145deg,#111c16,#0b120e)}
+.feature .glyph{color:var(--amber);text-shadow:0 0 14px #e9ae5833}
+.game-card{background:linear-gradient(160deg,#18251c,#0b120e);border-color:#536c55}
+.game-card:before{content:"";position:absolute;inset:4px;border:1px solid #ffffff08;pointer-events:none}
+.card-top{color:#91a58e}
+.card-illustration{position:relative;overflow:hidden;background-image:linear-gradient(135deg,#4b694b,#111a13)}
+.card-illustration:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 5px,#d2e0c50b 6px);pointer-events:none}
+.card-symbol{text-shadow:0 0 18px currentColor}
+.broadcast-terminal{grid-column:2;grid-row:1;border-color:#4b624c;background:linear-gradient(145deg,#08110c,#050a07);box-shadow:0 14px 35px #0005,inset 0 0 30px #0008;margin:0;width:100%;min-width:0;position:relative;z-index:2}
+.terminal-head{background:#101b13}
+.final-cta{background:radial-gradient(ellipse at center,#2b483266,transparent 58%),repeating-linear-gradient(90deg,transparent 0 79px,#9bb89a06 80px),#090f0c}
+.final-cta .btn.primary{box-shadow:0 0 24px #a8ce8c22}
+::selection{background:#b8d6a4;color:#09100c}
+:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+@media(max-width:900px){.console-wrap{grid-template-columns:1fr;gap:14px}.console{grid-column:1;grid-row:1}.broadcast-terminal{grid-column:1;grid-row:2}.floating-card{right:-16px;bottom:-26px}}
+@media(max-width:760px){.wrap{width:min(100% - 36px,1180px)}.hero{min-height:auto}.hero-grid{padding:65px 0 80px}.console-wrap{filter:drop-shadow(0 16px 22px #0008)}.section-head{padding-bottom:15px}}
+@media(prefers-reduced-motion:reduce){.screen:before{animation:none}}
+
+
+/* V15 — keep every live log entry inside the terminal on narrow and wide layouts */
+.broadcast-terminal{box-sizing:border-box;min-width:0;max-width:100%;overflow:hidden}
+.terminal-head{min-width:0;flex-wrap:wrap;align-items:center;row-gap:6px}
+.terminal-head>span{min-width:0;overflow-wrap:anywhere}
+.terminal-lines{box-sizing:border-box;min-width:0;width:100%;overflow:hidden}
+.terminal-lines p{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);align-items:start;column-gap:9px;min-width:0;width:100%;max-width:100%;overflow-wrap:anywhere;word-break:normal}
+.terminal-lines time,.terminal-lines b{min-width:0;max-width:100%;white-space:nowrap}
+.terminal-lines p{white-space:normal}
+@media(max-width:520px){.terminal-head{font-size:8px;letter-spacing:.08em}.terminal-lines{padding-inline:10px}.terminal-lines p{grid-template-columns:max-content max-content minmax(0,1fr);column-gap:6px;font-size:9px}}
+
+
+/* V16 — integrated Steam marketing GIFs and gameplay stills */
+.media-section{padding:104px 0 112px;position:relative}
+.media-section .section-head{margin-bottom:34px}
+.media-reel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.media-feature{min-width:0;overflow:hidden;border:1px solid #34483b;background:linear-gradient(145deg,#111b15,#090f0c);box-shadow:0 14px 32px #0004}
+.media-feature-wide{grid-column:span 1}
+.media-visual{display:block;position:relative;overflow:hidden;aspect-ratio:16/9;background:#050a08;border-bottom:1px solid #34483b}
+.media-visual img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.7,.2,1),filter .35s}
+.media-visual:hover img{transform:scale(1.035);filter:brightness(1.12)}
+.media-playmark{position:absolute;top:12px;right:12px;padding:6px 9px;border:1px solid #9db88b66;background:#080e0bd9;color:#b9d6a3;font:9px var(--mono);letter-spacing:.12em}
+.media-playmark i{font-style:normal;color:var(--amber);margin-left:5px}
+.media-copy{padding:17px 19px 19px}
+.media-kicker{color:#9db88b;font:9px var(--mono);letter-spacing:.16em}
+.media-copy h3{margin:8px 0 6px;color:var(--cream);font-size:20px;letter-spacing:-.025em}
+.media-copy p{margin:0;color:#a5b0a4;font-size:13px;line-height:1.65}
+.media-stills-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:38px 0 15px;padding-top:20px;border-top:1px solid #34483b}
+.media-stills-note{color:#819183;font:9px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.media-stills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.media-still{display:block;min-width:0;overflow:hidden;border:1px solid #34483b;background:#0a100d;color:#b9c5b6}
+.media-still img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .45s,filter .3s}
+.media-still:hover img{transform:scale(1.035);filter:brightness(1.12)}
+.media-still span{display:flex;justify-content:space-between;gap:10px;padding:11px 12px;font:9px var(--mono);letter-spacing:.1em}
+.media-still i{color:var(--amber);font-style:normal}
+@media(max-width:760px){
+ .media-section{padding:78px 0}
+ .media-reel{gap:12px}
+ .media-copy{padding:13px}
+ .media-copy h3{font-size:17px}
+ .media-copy p{font-size:12px}
+ .media-stills{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+ .media-reel{grid-template-columns:1fr}
+ .media-feature-wide{grid-column:auto}
+ .media-stills{grid-template-columns:1fr}
+ .media-stills-head{align-items:flex-start;flex-direction:column}
+}
+
+</style>
+</head>
+<body>
+<div class="boot-screen" id="bootScreen" aria-hidden="true">
+ <div class="boot-content"><div class="boot-mark">BC<span>•</span>01</div><div class="boot-title">BOTCAST PIRATE RADIO</div><div class="boot-progress"><i></i></div><div class="boot-caption" id="bootCaption">INITIALIZING TRANSMITTER…</div></div>
+</div>
+<div class="warning-flash" id="warningFlash" role="status" aria-live="polite"><b id="warningType">WARNING</b><span id="warningText">UNSTABLE CARRIER DETECTED</span></div>
+
+<header>
+ <div class="wrap nav">
+  <a class="brand" href="#top" aria-label="BOTCAST home"><svg class="brand-logo" viewBox="0 0 48 48" role="img" aria-label="BOTCAST radio tower logo">
+      <path d="M24 5 L16 42 M24 5 L32 42 M19 28 H29 M17 36 H31" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <path d="M24 5 V1 M21 5 H27" fill="none" stroke="#f0b45b" stroke-width="2.2"/>
+      <path d="M12 12 Q24 -1 36 12 M7 7 Q24 -11 41 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      <circle cx="24" cy="5" r="3" fill="#f0b45b"/>
+      <path d="M10 43 H38" stroke="currentColor" stroke-width="2"/>
+      <path d="M18 20 H30" stroke="#e16e5d" stroke-width="2"/>
+    </svg><span>BOTCAST</span></a>
+  <nav class="navlinks" id="navlinks">
+   <a href="#about">The game</a><a href="#gameplay">How to play</a><a href="#cards">The signal</a><a href="#media">Media</a><a href="#features">Features</a>
+  </nav>
+  <a class="nav-cta" href="#transmission">Follow the signal <span>↗</span></a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open navigation" aria-expanded="false">MENU +</button>
+ </div>
+</header>
+<main id="top">
+<section class="hero">
+ <div class="wrap hero-grid">
+  <div class="hero-copy">
+   <div class="status"><span class="dot"></span> Transmission in progress · In development</div>
+   <div class="eyebrow">An underground broadcast experience</div>
+   <h1>BO<span class="signal">T</span><br>CAST<span style="color:var(--amber)">.</span></h1>
+   <div class="tagline">BROADCAST BEYOND REALITY.</div>
+   <p>Build your pirate radio empire. Deal strange signals, chain impossible combos, and turn a forgotten frequency into the voice of an entire city.</p>
+   <div class="actions">
+    <a class="btn primary" href="#gameplay">Explore the game <span>↓</span></a>
+    <a class="btn secondary" href="#transmission">Stay tuned <span>↗</span></a>
+   </div>
+   <div class="hero-meta">
+    <div>Genre<b>Roguelike deckbuilder</b></div>
+    <div>Signal<b>Single-player</b></div>
+    <div>Platform<b>PC · Planned</b></div>
+   </div>
+  </div>
+  <div class="console-wrap" aria-label="Illustration of a retro radio console">
+   <div class="console">
+    <div class="console-top"><span>BC-01 // PIRATE TRANSMITTER</span><span class="live">ON AIR</span></div>
+    <div class="screen">
+     <div class="screen-head"><span>FREQUENCY LOCK</span><span>STEREO ◉</span></div>
+     <div class="tuner" id="frequencyTuner">
+      <div class="tuner-top"><span>MANUAL FREQUENCY SCAN</span><span id="tunerMode">SEARCHING</span></div>
+      <div class="tuner-current"><span id="tunedFrequency">98.6</span> <small>FM</small></div>
+      <div class="dial-visual" aria-hidden="true"><div class="dial-arc"></div><i id="dialNeedle"></i><span>87.5</span><span>108.0</span></div>
+      <label class="sr-only" for="frequencyDial">Tune the radio frequency</label>
+      <input id="frequencyDial" type="range" min="875" max="1080" step="1" value="986" aria-label="Tune the radio frequency">
+      <div class="tuner-scale"><span>87.5 MHz</span><span>108.0 MHz</span></div>
+      <div class="tuner-feedback"><span id="tunerHint">DRAG TO FIND THE CLEANEST SIGNAL</span><strong id="tunerStatus" aria-live="polite">NO LOCK</strong></div>
+      <div class="tuner-meter"><span id="tunerMeter"></span></div>
+     </div>
+     <div class="freq-sub" id="sourceReadout">UNKNOWN SOURCE DETECTED</div>
+      <div class="secret-message" id="secretMessage" aria-live="polite">··· WAITING FOR CARRIER ···</div>
+     <div class="wave" id="wave"></div>
+     <div class="screen-foot"><span>LISTENERS <b style="color:var(--amber)"><span id="listenerCount">08,421</span></b></span><span>SIGNAL <b id="signalState" style="color:var(--amber)">SEARCHING</b></span></div>
+    </div>
+    <div class="console-controls">
+     <div class="knob"><span>GAIN</span></div><div class="knob"><span>FREQUENCY</span></div><div class="knob"><span>MODULATION</span></div>
+    </div>
+    <div class="vu-bank" aria-label="Live audio level meters">
+ <div class="vu-unit"><span>LEFT CH.</span><div class="vu-track"><i></i></div></div>
+ <div class="vu-unit"><span>RIGHT CH.</span><div class="vu-track"><i></i></div></div>
+ <span class="vu-db">−08 dB</span>
+</div>
+<div class="console-bottom"><span>BOTCAST BROADCAST SYSTEM</span><span>UNIT 001 / 198X</span></div>
+   </div>
+   <div class="floating-card"><div class="card-top"><span>RARE / NEWS</span><span>01</span></div><div class="card-art">◉</div><small>PROGRAM CARD</small><b>BREAKING NEWS</b></div>
+
+  <div class="broadcast-terminal" aria-label="Live broadcast log">
+   <div class="terminal-head"><span><i></i> LIVE BROADCAST LOG</span><span>CHANNEL 01 / ENCRYPTED</span></div>
+   <div class="terminal-lines" id="broadcastLog" aria-live="polite">
+    <p><time>00:00:01</time><b>BOOT</b> Establishing connection to underground relay…</p>
+    <p><time>00:00:03</time><b>SCAN</b> Searching for unregistered carriers…</p>
+    <p><time>00:00:05</time><b>READY</b> Awaiting operator input.</p>
+   </div>
+  </div>
+  </div>
+ </div>
+</section>
+
+<div class="ticker" aria-label="Live radio news ticker">
+ <div class="ticker-track" id="tickerTrack">
+  <div class="ticker-group" id="tickerGroup"></div>
+  <div class="ticker-group" id="tickerGroupClone" aria-hidden="true"></div>
+ </div>
+</div>
+
+<section id="about">
+ <div class="wrap">
+  <div class="section-head"><div><div class="eyebrow">01 / The premise</div><h2>One station.<br>Infinite possibilities.</h2></div><p class="section-intro">The city is listening. What you broadcast is up to you. Every card is a program, every combo is a new way to bend the signal.</p></div>
+  <div class="about-grid">
+   <div class="about-art"><div class="tower"><div class="antenna"></div><div class="tower-base"><span>BC</span></div></div><div class="art-label">TRANSMISSION TOWER // SECTOR 09</div></div>
+   <div class="about-copy">
+    <div class="eyebrow">Your frequency. Your rules.</div>
+    <p>Start with a handful of broadcasts and a transmitter held together with tape. Play your cards in the right order, trigger wild synergies, and pull more listeners into your signal.</p>
+    <p>But the airwaves are unstable. Push your signal too far and something may answer. Sometimes the interference is a curse. Sometimes it's the best thing that could happen to your station.</p>
+    <div class="stat-row">
+     <div class="stat"><strong>∞</strong><span>Combo potential</span></div>
+     <div class="stat"><strong>2D</strong><span>Pixel-inspired world</span></div>
+     <div class="stat"><strong>FM</strong><span>Underground radio</span></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="gameplay" id="gameplay">
+ <div class="wrap">
+  <div class="section-head"><div><div class="eyebrow">02 / The broadcast loop</div><h2>Make noise.<br>Make history.</h2></div><p class="section-intro">Easy to pick up. Hard to put down. Build a deck, find a rhythm, and make every broadcast count.</p></div>
+  <div class="steps">
+   <article class="step"><span class="step-no">STEP 01 / COLLECT</span><span class="step-icon">▤</span><h3>Build your playlist</h3><p>Discover broadcast cards, strange modifiers, and station equipment. Shape a deck around the kind of signal you want to send.</p><div class="step-line"></div></article>
+   <article class="step"><span class="step-no">STEP 02 / TRANSMIT</span><span class="step-icon">⌁</span><h3>Chain the signal</h3><p>Choose your cards and their order. News sparks panic. Music calms the crowd. A mysterious transmission can turn everything upside down.</p><div class="step-line"></div></article>
+   <article class="step"><span class="step-no">STEP 03 / AMPLIFY</span><span class="step-icon">↗</span><h3>Grow your audience</h3><p>Hit the nightly listener target, earn cash, upgrade your station, and survive the next shift. The city is only getting stranger.</p><div class="step-line"></div></article>
+  </div>
+ </div>
+</section>
+
+<section id="cards">
+ <div class="wrap">
+  <div class="section-head"><div><div class="eyebrow">03 / Sample transmissions</div><h2>Every card tells<br>a different story.</h2></div><p class="section-intro">A few voices from the airwaves. Discover combinations, experiment with your lineup, and make the impossible broadcast.</p></div>
+  <div class="cards-showcase">
+   <article class="game-card" tabindex="0"><div class="card-top"><span>NEWS / COMMON</span><span>001</span></div><div class="card-illustration"><span class="card-symbol">◉</span></div><div class="card-name">Breaking News</div><div class="card-desc">A sudden headline sends a shockwave through the city.</div><div class="card-value"><span>+ AUDIENCE</span><span class="rarity">COMMON</span></div></article>
+   <article class="game-card" tabindex="0"><div class="card-top"><span>PANIC / RARE</span><span>014</span></div><div class="card-illustration" style="background:radial-gradient(circle,#71463a,#171714 72%)"><span class="card-symbol" style="color:var(--red)">⚠</span></div><div class="card-name">Mass Panic</div><div class="card-desc">Turn the previous broadcast into a citywide frenzy.</div><div class="card-value"><span>× MULTIPLIER</span><span class="rarity">RARE</span></div></article>
+   <article class="game-card" tabindex="0"><div class="card-top"><span>MYSTERY / EPIC</span><span>027</span></div><div class="card-illustration" style="background:radial-gradient(circle,#315b61,#101b1b 72%)"><span class="card-symbol" style="color:var(--cyan)">⌁</span></div><div class="card-name">Ghost Frequency</div><div class="card-desc">Something on the other end is trying to get through.</div><div class="card-value"><span>◇ UNKNOWN</span><span class="rarity">EPIC</span></div></article>
+   <article class="game-card" tabindex="0"><div class="card-top"><span>MUSIC / UNCOMMON</span><span>009</span></div><div class="card-illustration" style="background:radial-gradient(circle,#685333,#171811 72%)"><span class="card-symbol">♫</span></div><div class="card-name">Midnight Mixtape</div><div class="card-desc">A late-night favorite with an unexpectedly loyal crowd.</div><div class="card-value"><span>+ SYNERGY</span><span class="rarity">UNCOMMON</span></div></article>
+  </div>
+ </div>
+</section>
+
+
+<section class="media-section" id="media">
+ <div class="wrap">
+  <div class="section-head">
+   <div><div class="eyebrow">04 / Signals from the studio</div><h2>See what’s<br>on the air.</h2></div>
+   <p class="section-intro">A glimpse inside the broadcast room: chain wild card effects, tune into strange frequencies, and keep the station alive when the signal starts to shift.</p>
+  </div>
+  <div class="media-reel">
+   <article class="media-feature media-feature-wide">
+    <a class="media-visual" href="media/card-combo.gif" target="_blank" rel="noopener" aria-label="Open animated card combo preview">
+     <img src="media/card-combo.gif" alt="Animated BOTCAST gameplay showing a chain of broadcast cards resolving" loading="lazy">
+     <span class="media-playmark" aria-hidden="true">GIF <i>↗</i></span>
+    </a>
+    <div class="media-copy"><span class="media-kicker">01 / COMBO ENGINE</span><h3>Chain impossible combos.</h3><p>Build your lineup, trigger effects in sequence, and turn one broadcast into something much bigger.</p></div>
+   </article>
+   <article class="media-feature">
+    <a class="media-visual" href="media/radio-tuning.gif" target="_blank" rel="noopener" aria-label="Open animated frequency tuning preview">
+     <img src="media/radio-tuning.gif" alt="Animated frequency tuning interface with a signal strength meter" loading="lazy">
+     <span class="media-playmark" aria-hidden="true">GIF <i>↗</i></span>
+    </a>
+    <div class="media-copy"><span class="media-kicker">02 / FREQUENCY HOPPING</span><h3>Find the hidden signal.</h3><p>Search the dial, lock onto a carrier, and discover what might be waiting between stations.</p></div>
+   </article>
+   <article class="media-feature">
+    <a class="media-visual" href="media/broadcast-live.gif" target="_blank" rel="noopener" aria-label="Open animated broadcast gameplay preview">
+     <img src="media/broadcast-live.gif" alt="Animated BOTCAST broadcast interface with cards and live listener count" loading="lazy">
+     <span class="media-playmark" aria-hidden="true">GIF <i>↗</i></span>
+    </a>
+    <div class="media-copy"><span class="media-kicker">03 / ON AIR</span><h3>Take the station live.</h3><p>Play your programs, watch the meters move, and bring more listeners into the broadcast.</p></div>
+   </article>
+   <article class="media-feature media-feature-wide">
+    <a class="media-visual" href="media/something-listening.gif" target="_blank" rel="noopener" aria-label="Open animated strange signal artwork">
+     <img src="media/something-listening.gif" alt="Animated mysterious radio waveform and the words Something is listening" loading="lazy">
+     <span class="media-playmark" aria-hidden="true">GIF <i>↗</i></span>
+    </a>
+    <div class="media-copy"><span class="media-kicker">04 / UNKNOWN TRANSMISSION</span><h3>Something is listening.</h3><p>Not every signal comes from a station you know. Some transmissions seem to be answering back.</p></div>
+   </article>
+  </div>
+  <div class="media-stills-head"><span class="eyebrow">GAMEPLAY FRAMES</span><span class="media-stills-note">Captured from the current game build</span></div>
+  <div class="media-stills">
+   <a href="media/broadcast-console.webp" target="_blank" rel="noopener" class="media-still"><img src="media/broadcast-console.webp" alt="BOTCAST main broadcast console gameplay screenshot" loading="lazy"><span>THE BROADCAST CONSOLE <i>↗</i></span></a>
+   <a href="media/combo-chain.webp" target="_blank" rel="noopener" class="media-still"><img src="media/combo-chain.webp" alt="BOTCAST card combo resolving gameplay screenshot" loading="lazy"><span>COMBO RESOLUTION <i>↗</i></span></a>
+   <a href="media/frequency-hopping.webp" target="_blank" rel="noopener" class="media-still"><img src="media/frequency-hopping.webp" alt="BOTCAST frequency hopping gameplay screenshot" loading="lazy"><span>FREQUENCY HOPPING <i>↗</i></span></a>
+  </div>
+ </div>
+</section>
+
+<section class="broadcast-section" id="broadcast">
+ <div class="wrap">
+  <div class="section-head">
+   <div><div class="eyebrow">04 / Inside the broadcast</div><h2>Every card is<br>part of the signal.</h2></div>
+   <p class="section-intro">BOTCAST is a roguelike deckbuilder about building a radio show one decision at a time. Your lineup, its order, and the strange effects between cards decide how far your signal travels.</p>
+  </div>
+  <div class="broadcast-flow">
+   <article class="broadcast-step">
+    <div class="broadcast-index">01 <span> / SELECT</span></div>
+    <div class="broadcast-icon">▤</div>
+    <h3>Build your lineup</h3>
+    <p>Draw a hand of broadcast cards: breaking news, music, conspiracy theories, late-night entertainment, and more. Choose the programs that fit your strategy.</p>
+   </article>
+   <article class="broadcast-step">
+    <div class="broadcast-index">02 <span> / SEQUENCE</span></div>
+    <div class="broadcast-icon">↝</div>
+    <h3>Find the combination</h3>
+    <p>Arrange your broadcasts in the right order. Some cards amplify the next one, others react to tags, repeat effects, or turn a risky show into a huge combo.</p>
+   </article>
+   <article class="broadcast-step">
+    <div class="broadcast-index">03 <span> / TRANSMIT</span></div>
+    <div class="broadcast-icon">◉</div>
+    <h3>Grow your audience</h3>
+    <p>Go live, resolve your synergies, and attract listeners. Earn cash, upgrade your deck, and prepare for stranger signals and tougher nights ahead.</p>
+   </article>
+  </div>
+  <div class="broadcast-note"><span class="note-mark">SIGNAL LOG // 04</span><span>No two broadcasts need to sound alike. The best runs come from unexpected combinations.</span></div>
+ </div>
+</section>
+
+<section class="features" id="features">
+ <div class="wrap">
+  <div class="section-head"><div><div class="eyebrow">05 / What's on the dial</div><h2>A whole city<br>on one frequency.</h2></div><p class="section-intro">A run is never the same twice. Build a strategy, adapt to the interference, and see how far your station can reach.</p></div>
+  <div class="feature-grid">
+   <article class="feature"><div class="glyph">▣</div><h3>Build your deck</h3><p>Collect broadcast cards, discover rarities, and upgrade the programs that define your station.</p></article>
+   <article class="feature"><div class="glyph">✳</div><h3>Uncover wild combos</h3><p>Chain effects, stack multipliers, and create broadcasts that spiral into spectacular score runs.</p></article>
+   <article class="feature"><div class="glyph">⌘</div><h3>Equip the station</h3><p>Find odd pieces of hardware that change how your cards behave and unlock new strategies.</p></article>
+   <article class="feature"><div class="glyph">◉</div><h3>Face the interference</h3><p>Random encounters and powerful broadcast bosses will test the limits of your signal.</p></article>
+   <article class="feature"><div class="glyph">↻</div><h3>Every run is different</h3><p>Different starting decks, events, rewards, and discoveries keep the airwaves unpredictable.</p></article>
+   <article class="feature"><div class="glyph">∞</div><h3>Go beyond the dial</h3><p>Push your station further in challenge runs and endless broadcasts.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="final-cta" id="transmission">
+ <div class="wrap">
+  <div class="eyebrow" style="justify-content:center">End of transmission? Not even close.</div>
+  <h2>THE CITY IS<br>LISTENING.</h2>
+  <p>BOTCAST is in development. Follow the signal and be there when the first broadcast goes live.</p>
+  <a class="btn primary" href="#top">Back to the frequency <span>↑</span></a>
+  <div class="mono" style="font-size:9px;color:#718576;margin-top:25px;letter-spacing:.15em"><span class="live-frequency">98.6</span> FM // BROADCAST BEYOND REALITY</div>
+ </div>
+</section>
+</main>
+
+<footer>
+ <div class="wrap footer-inner">
+  <div class="footer-brand">BOTCAST<span style="color:var(--amber)">.</span></div>
+  <div class="footer-meta"><span>© <span id="year"></span> BOTCAST · IN DEVELOPMENT</span><span class="footer-frequency">SCANNING <b class="live-frequency">98.6</b> FM</span></div>
+  <div class="footer-links"><a href="#about">The game</a><a href="#features">Features</a><a href="#top">Back to top ↑</a></div>
+ </div>
+</footer>
+<script>
+const waveHeights=[20,36,52,29,62,44,70,33,48,24,58,76,39,61,28,45,66,31,54,22,41,69,35,57,26,47,63,32,50,19,43,60,27,52,36,72];
+function makeWave(id,large=false){
+ const el=document.getElementById(id); if(!el)return;
+ waveHeights.forEach((h,i)=>{const bar=document.createElement('i');bar.style.setProperty('--h',(large?h*1.35:h)+'px');bar.style.setProperty('--d',(i*0.035)+'s');el.appendChild(bar);});
+}
+
+makeWave('wave');
+
+// Audience reacts to the quality of the tuned frequency.
+(function initAudienceReadout(){
+ const dial=document.getElementById('frequencyDial');
+ const count=document.getElementById('listenerCount');
+ if(!dial||!count)return;
+ let quality=0;
+ function refreshAudience(glitch=true){
+   const min=875,max=1080;
+   const target=Number(window.__botcastTargetFrequency||986);
+   const distance=Math.abs(Number(dial.value)-target);
+   quality=Math.max(0,Math.round(100-distance/1.12));
+   const baseline=1250+Math.round(quality*142);
+   const variation=Math.round((Math.random()-.5)*(260+(100-quality)*8));
+   const audience=Math.max(120,baseline+variation);
+   count.textContent=audience.toLocaleString('en-US');
+   if(glitch){
+     count.classList.add('is-glitching');
+     window.setTimeout(()=>count.classList.remove('is-glitching'),150);
+   }
+ }
+ // The tuner stores its randomized target here so both readouts share one signal.
+ window.addEventListener('botcast:tune',e=>{
+   quality=e.detail.quality;
+   const baseline=1250+Math.round(quality*142);
+   const variation=Math.round((Math.random()-.5)*(260+(100-quality)*8));
+   count.textContent=Math.max(120,baseline+variation).toLocaleString('en-US');
+   count.classList.add('is-glitching');
+   window.setTimeout(()=>count.classList.remove('is-glitching'),150);
+ });
+ refreshAudience(false);
+ let audienceTimer=window.setInterval(()=>{
+   if(!document.hidden)refreshAudience(true);
+ },1700);
+ document.addEventListener('visibilitychange',()=>{
+   if(document.hidden&&audienceTimer){clearInterval(audienceTimer);audienceTimer=null;}
+   else if(!document.hidden&&!audienceTimer){audienceTimer=window.setInterval(()=>refreshAudience(true),1700);}
+ });
+})();
+
+
+
+// Randomized frequency hunt: a fresh hidden target is generated per page load.
+(function initFrequencyTuner(){
+ const tuner=document.getElementById('frequencyTuner');
+ const dial=document.getElementById('frequencyDial');
+ if(!tuner||!dial)return;
+ const readout=document.getElementById('tunedFrequency');
+ const hint=document.getElementById('tunerHint');
+ const status=document.getElementById('tunerStatus');
+ const mode=document.getElementById('tunerMode');
+ const meter=document.getElementById('tunerMeter');
+ const needle=document.getElementById('dialNeedle');
+ const screen=document.querySelector('.screen');
+ const signalState=document.getElementById('signalState');
+ const secret=document.getElementById('secretMessage');
+ const source=document.getElementById('sourceReadout');
+ const min=875,max=1080;
+ const target=min+Math.floor(Math.random()*(max-min+1));
+ window.__botcastTargetFrequency=target;
+ let start=min+Math.floor(Math.random()*(max-min+1));
+ if(Math.abs(start-target)<35) start=target>977?target-45:target+45;
+ start=Math.max(min,Math.min(max,start));
+ dial.value=String(start);
+ function update(){
+   const current=Number(dial.value);
+   const distance=Math.abs(current-target);
+   const quality=Math.max(0,Math.round(100-distance/1.12));
+   readout.textContent=(current/10).toFixed(1);
+   if(needle)needle.style.transform='rotate('+(-48+(current-min)/(max-min)*96)+'deg)';
+   if(screen)screen.classList.toggle('signal-locked',distance<=2);
+   if(signalState){signalState.textContent=distance<=2?'LOCKED':distance<=24?'WEAK':'SEARCHING';signalState.style.color=distance<=2?'var(--cyan)':distance<=24?'var(--amber)':'var(--red)';}
+   if(secret){
+     secret.textContent=distance<=2?'INCOMING // “THE TOWER REMEMBERS YOUR VOICE”':'··· CARRIER NOISE // LISTEN CLOSELY ···';
+   }
+   if(source)source.textContent=distance<=2?'SIGNAL LOCKED // ENCRYPTED SOURCE':'UNKNOWN SOURCE DETECTED';
+   meter.style.width=quality+'%';
+   tuner.classList.toggle('tuner-found',distance<=2);
+   if(distance<=2){
+     hint.textContent='CARRIER FOUND — FREQUENCY LOCKED';
+     status.textContent='SIGNAL LOCKED';
+     mode.textContent='LOCKED';
+   }else if(distance<=9){
+     hint.textContent='VERY CLOSE — FINE TUNE';
+     status.textContent='STRONG SIGNAL';
+     mode.textContent='NEAR LOCK';
+   }else if(distance<=24){
+     hint.textContent='SIGNAL DETECTED — KEEP SEARCHING';
+     status.textContent='PARTIAL RECEPTION';
+     mode.textContent='SCANNING';
+   }else{
+     hint.textContent=distance>75?'JUST STATIC — KEEP TURNING':'WEAK CARRIER — ADJUST THE DIAL';
+     status.textContent='NO LOCK';
+     mode.textContent='SEARCHING';
+   }
+   dial.setAttribute('aria-valuetext',(current/10).toFixed(1)+' megahertz, '+quality+' percent signal quality');
+   window.dispatchEvent(new CustomEvent('botcast:tune',{detail:{quality}}));
+ }
+ dial.addEventListener('input',update);
+ update();
+})();
+
+
+// VU meters react independently to reception quality and live signal noise.
+(function initReactiveMeters(){
+ const bars=Array.from(document.querySelectorAll('.vu-track i'));
+ const db=document.querySelector('.vu-db');
+ if(!bars.length)return;
+ let q=45;
+ window.addEventListener('botcast:tune',e=>{q=e.detail.quality;});
+ function tick(){
+   if(document.hidden)return;
+   bars.forEach((bar,i)=>{
+     const level=Math.max(12,Math.min(100,q*(i===0?.78:.92)+(Math.random()-.5)*34));
+     bar.style.transform='scaleX('+(level/100)+')';
+   });
+   if(db)db.textContent=(q>75?'−03':q>40?'−08':'−18')+' dB';
+ }
+ tick();setInterval(tick,260);
+ document.addEventListener('visibilitychange',tick);
+})();
+
+// Reveal content as it enters the viewport. No scroll-event polling.
+(function initScrollMotion(){
+ const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const candidates=document.querySelectorAll('main section .wrap > *, main section .wrap .section-head, .feature, .broadcast-step, .card-sample, .about-copy, .about-art');
+ candidates.forEach((el,index)=>{
+   if(el.classList.contains('scroll-reveal'))return;
+   el.classList.add('scroll-reveal');
+   const siblings=el.parentElement?Array.from(el.parentElement.children).filter(x=>x.classList.contains('scroll-reveal')):[];
+   el.style.setProperty('--reveal-delay',Math.min(siblings.indexOf(el),4)*75+'ms');
+ });
+ if(reduce||!('IntersectionObserver' in window)){
+   document.querySelectorAll('.scroll-reveal').forEach(el=>el.classList.add('is-visible'));
+   return;
+ }
+ document.body.classList.add('motion-ready');
+ const observer=new IntersectionObserver((entries)=>{
+   entries.forEach(entry=>{
+     if(entry.isIntersecting){
+       entry.target.classList.add('is-visible');
+       const section=entry.target.closest('section');
+       if(section&&Math.random()<.28){
+         section.classList.add('is-visible');
+         document.body.classList.add('section-glitch');
+         window.setTimeout(()=>document.body.classList.remove('section-glitch'),340);
+       }
+       observer.unobserve(entry.target);
+     }
+   });
+ },{threshold:.12,rootMargin:'0px 0px -35px 0px'});
+ document.querySelectorAll('.scroll-reveal').forEach(el=>observer.observe(el));
+})();
+
+
+// Build a randomized, fixed bulletin sequence for this page load.
+// The duplicated group makes the ticker loop seamlessly without swapping text mid-scroll.
+(function initAmbientTicker(){
+ const group=document.getElementById('tickerGroup');
+ const clone=document.getElementById('tickerGroupClone');
+ const bulletins=[
+  {kind:'BREAKING',text:'UNIDENTIFIED SIGNAL REPORTED OVER SECTOR 09'},
+  {kind:'WARNING',text:'CIVIL DEFENCE WARNS OF UNSTABLE NIGHT-TIME TRANSMISSIONS'},
+  {kind:'ALERT',text:'UNKNOWN CALL SIGN INTERRUPTS THE MIDNIGHT BROADCAST'},
+  {kind:'TRANSMISSION',text:'SECOND VOICE DETECTED BENEATH THE STATIC'},
+  {kind:'WEATHER',text:'HEAVY ATMOSPHERIC INTERFERENCE EXPECTED AFTER DARK'},
+  {kind:'TRAFFIC',text:'LISTENERS REPORT RADIO DEAD ZONES ACROSS THE EAST DISTRICT'},
+  {kind:'BREAKING',text:'LOCAL NIGHT SHIFT TUNES IN — AUDIENCE NUMBERS RISING'},
+  {kind:'WARNING',text:'DO NOT APPROACH THE OLD TRANSMISSION TOWER'},
+  {kind:'ALERT',text:'POWER SURGE DETECTED NEAR THE UNDERGROUND STUDIO'},
+  {kind:'TRANSMISSION',text:'PIRATE BROADCAST FOUND ON A FREQUENCY THAT DOES NOT EXIST'},
+  {kind:'WEATHER',text:'A STRANGE HUM IS EXPECTED TO CONTINUE THROUGH THE NIGHT'},
+  {kind:'TRAFFIC',text:'UNLICENSED SIGNAL CAUSING INTERFERENCE ON MAIN STREET'}
+ ];
+ const shuffle=items=>{
+   const result=items.slice();
+   for(let i=result.length-1;i>0;i--){
+     const j=Math.floor(Math.random()*(i+1));
+     [result[i],result[j]]=[result[j],result[i]];
+   }
+   return result;
+ };
+ function addTextItem(parent,html){
+   const item=document.createElement('span');
+   item.innerHTML=html;
+   parent.appendChild(item);
+ }
+ function buildGroup(parent){
+   addTextItem(parent,'<strong>●</strong> LIVE FROM THE UNDERGROUND');
+   const freq=document.createElement('span');
+   freq.className='ticker-frequency';
+   freq.append('FREQ ');
+   const value=document.createElement('b');
+   value.className='live-frequency';
+   value.textContent='98.6';
+   freq.append(value,' FM');
+   parent.appendChild(freq);
+   addTextItem(parent,'<strong>✳</strong> STRANGE SIGNALS. BIGGER AUDIENCES.');
+   shuffle(bulletins).forEach(item=>{
+     const news=document.createElement('span');
+     news.className='ticker-news';
+     news.dataset.kind=item.kind;
+     const kind=document.createElement('strong');
+     kind.className='ticker-kind';
+     kind.textContent=item.kind;
+     const headline=document.createElement('span');
+     headline.className='ticker-headline';
+     headline.textContent=item.text;
+     news.append(kind,headline);
+     parent.appendChild(news);
+   });
+   addTextItem(parent,'<strong>●</strong> BOTCAST PIRATE RADIO NETWORK');
+ }
+ if(!group||!clone)return;
+ buildGroup(group);
+ clone.innerHTML=group.innerHTML;
+ const frequencyNodes=document.querySelectorAll('.live-frequency');
+ function rollFrequency(){
+   const value=(87.5+Math.random()*20.5).toFixed(1);
+   frequencyNodes.forEach(node=>node.textContent=value);
+   window.setTimeout(rollFrequency,2200+Math.random()*3000);
+ }
+ rollFrequency();
+})();
+
+
+// Rare, restrained signal interruptions: atmospheric, never a constant distraction.
+(function initSignalGlitches(){
+ const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce)return;
+ let timer;
+ function schedule(){
+   timer=window.setTimeout(()=>{
+     if(!document.hidden){
+       document.body.classList.add('signal-glitch');
+       window.setTimeout(()=>document.body.classList.remove('signal-glitch'),220);
+     }
+     schedule();
+   },18000+Math.random()*17000);
+ }
+ document.addEventListener('visibilitychange',()=>{
+   if(document.hidden){clearTimeout(timer);document.body.classList.remove('signal-glitch');}
+   else schedule();
+ });
+ schedule();
+})();
+
+
+// Boot sequence and restrained random emergency bulletins.
+(function initStationAtmosphere(){
+ const boot=document.getElementById('bootScreen');
+ const caption=document.getElementById('bootCaption');
+ if(boot){
+   const lines=['INITIALIZING TRANSMITTER…','CALIBRATING ANALOG CIRCUITS…','CONNECTING TO THE UNDERGROUND…','YOU ARE ON THE AIR.'];
+   let n=0;const cycle=setInterval(()=>{if(caption)caption.textContent=lines[Math.min(n++,lines.length-1)];},300);
+   setTimeout(()=>{clearInterval(cycle);boot.classList.add('boot-done');},1550);
+ }
+ const toast=document.getElementById('warningFlash'),type=document.getElementById('warningType'),msg=document.getElementById('warningText');
+ const alerts=[
+  ['WARNING','UNSTABLE CARRIER DETECTED'],
+  ['LOST SIGNAL','RELAY 07 HAS GONE DARK'],
+  ['UNKNOWN TRANSMISSION','A SECOND VOICE IS ON THE LINE'],
+  ['EMERGENCY BULLETIN','DO NOT ANSWER THE THIRD CALL'],
+  ['SIGNAL BREACH','UNREGISTERED FREQUENCY ENTERING THE BAND']
+ ];
+ let timer;
+ function schedule(){
+  timer=setTimeout(()=>{
+   if(!document.hidden&&toast){
+    const a=alerts[Math.floor(Math.random()*alerts.length)];
+    type.textContent=a[0];msg.textContent=a[1];toast.classList.add('visible');
+    setTimeout(()=>toast.classList.remove('visible'),3200);
+    addLog(a[0],a[1]);
+   }
+   schedule();
+  },22000+Math.random()*24000);
+ }
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){clearTimeout(timer);toast&&toast.classList.remove('visible');}else schedule();});
+ schedule();
+})();
+
+// Fictional live broadcast log, with a bounded rolling history.
+(function initBroadcastLog(){
+ const log=document.getElementById('broadcastLog');if(!log)return;
+ const entries=[
+  ['SCAN','Sweeping the FM band for unlicensed voices…'],
+  ['LISTENER','New listeners detected near Sector 09.'],
+  ['RELAY','Backup transmitter running at 62 percent.'],
+  ['INTEL','A coded message surfaced beneath the weather report.'],
+  ['MUSIC','Needle drop registered across the east district.'],
+  ['WARNING','Signal shadow moving against the wind.'],
+  ['ARCHIVE','Recovered tape marked NIGHT ZERO.'],
+  ['SYSTEM','Broadcast integrity check passed.']
+ ];
+ window.addEventListener('botcast:tune',e=>{
+  if(e.detail.quality>96)addLog('LOCK','Carrier synchronized. Hidden channel decoded.');
+ });
+ window.addEventListener('botcast:log',e=>addLog(e.detail.kind,e.detail.text));
+ window.addEventListener('DOMContentLoaded',()=>{});
+ let seconds=6;
+ function stamp(){seconds+=Math.floor(2+Math.random()*5);return '00:'+String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');}
+ window.addLog=addLog;
+ function addLog(kind,text){
+  const p=document.createElement('p'),time=document.createElement('time'),b=document.createElement('b');
+  time.textContent=stamp();b.textContent=kind;p.append(time,b,document.createTextNode(text));log.appendChild(p);
+  while(log.children.length>5)log.removeChild(log.firstChild);
+ }
+ function next(){
+  if(document.hidden)return;
+  const item=entries[Math.floor(Math.random()*entries.length)];addLog(item[0],item[1]);
+ }
+ let interval=setInterval(next,5100);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){clearInterval(interval);}else{next();interval=setInterval(next,5100);}});
+})();
+
+document.getElementById('year').textContent=new Date().getFullYear();
+const menu=document.getElementById('menuBtn'), nav=document.getElementById('navlinks');
+menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'CLOSE −':'MENU +';});
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='MENU +';}));
+</script>
+</body>
+</html>
